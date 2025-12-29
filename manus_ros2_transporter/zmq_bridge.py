@@ -10,6 +10,7 @@ Usage:
     ros2 run manus_ros2_transporter zmq_bridge --ros-args -p config_path:=/path/to/config.yaml
 """
 
+import re
 import threading
 from pathlib import Path
 from typing import Dict, Optional, Set
@@ -17,6 +18,7 @@ from typing import Dict, Optional, Set
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
+from rclpy.subscription import Subscription
 import zmq
 
 from manus_ros2_msgs.msg import ManusGlove
@@ -98,26 +100,21 @@ class ZmqBridgeNode(Node):
         self.glove_side_map: Dict[int, str] = {}
         
         # QoS profile for subscriptions
-        qos = QoSProfile(
+        self._qos = QoSProfile(
             reliability=QoSReliabilityPolicy.BEST_EFFORT,
             history=QoSHistoryPolicy.KEEP_LAST,
             depth=10
         )
         
-        # Subscribe to all manus_glove topics (dynamic discovery)
-        # Start with manus_glove_0 and manus_glove_1
-        self._glove_subscriptions = []
-        for i in range(10):  # Support up to 10 gloves
-            topic_name = f'/manus_glove_{i}'
-            sub = self.create_subscription(
-                ManusGlove,
-                topic_name,
-                lambda msg, topic=topic_name: self._glove_callback(msg, topic),
-                qos
-            )
-            self._glove_subscriptions.append(sub)
+        # Dynamic topic subscription
+        self._glove_subscriptions: Dict[str, Subscription] = {}
+        self._subscribed_topics: Set[str] = set()
+        self._topic_pattern = re.compile(r'^/manus_glove_\d+$')
         
-        log_info(f'Waiting for glove data on /manus_glove_* topics...')
+        # Timer for dynamic topic discovery (check every 1 second)
+        self._discovery_timer = self.create_timer(1.0, self._discover_topics)
+        
+        log_info(f'Waiting for glove topics (dynamic discovery)...')
         log_info(f'Side filter: {self.side_filter}')
     
     def _create_socket(self, side: str, port: int) -> None:
@@ -130,6 +127,32 @@ class ZmqBridgeNode(Node):
             log_zmq_bound(bind_addr, side)
         except zmq.ZMQError as e:
             log_error(f'Failed to bind ZMQ socket at {bind_addr}: {e}')
+    
+    def _discover_topics(self) -> None:
+        """Periodically check for new manus_glove topics and subscribe to them"""
+        # Get all available topics
+        topic_names_and_types = self.get_topic_names_and_types()
+        
+        for topic_name, type_names in topic_names_and_types:
+            # Check if it matches our pattern and hasn't been subscribed yet
+            if (self._topic_pattern.match(topic_name) and 
+                topic_name not in self._subscribed_topics and
+                'manus_ros2_msgs/msg/ManusGlove' in type_names):
+                
+                self._subscribe_to_topic(topic_name)
+    
+    def _subscribe_to_topic(self, topic_name: str) -> None:
+        """Subscribe to a manus_glove topic"""
+        log_info(f'Discovered topic: {topic_name}')
+        
+        sub = self.create_subscription(
+            ManusGlove,
+            topic_name,
+            lambda msg, topic=topic_name: self._glove_callback(msg, topic),
+            self._qos
+        )
+        self._glove_subscriptions[topic_name] = sub
+        self._subscribed_topics.add(topic_name)
     
     def _glove_callback(self, msg: ManusGlove, topic: str) -> None:
         """Handle incoming ManusGlove message"""
@@ -171,6 +194,10 @@ class ZmqBridgeNode(Node):
     def destroy_node(self):
         """Cleanup ZMQ resources on shutdown"""
         log_shutdown()
+        
+        # Cancel discovery timer
+        if self._discovery_timer:
+            self._discovery_timer.cancel()
         
         # Close all sockets
         with self.zmq_lock:
