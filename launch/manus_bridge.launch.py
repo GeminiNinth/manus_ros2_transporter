@@ -80,6 +80,8 @@ def generate_launch_description():
             'bind_address': LaunchConfiguration('bind_address'),
             'config_path': LaunchConfiguration('config_path'),
         }],
+        # Disable Python stdout buffering for real-time log output
+        additional_env={'PYTHONUNBUFFERED': '1'},
     )
     
     # Startup message

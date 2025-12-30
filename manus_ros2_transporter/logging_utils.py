@@ -35,21 +35,25 @@ def _timestamp() -> str:
 def log_debug(msg: str) -> None:
     """Print debug message with cyan color"""
     print(f"{Colors.GRAY}[{_timestamp()}] {Colors.DEBUG}[debug]{Colors.RESET} {msg}")
+    sys.stdout.flush()
 
 
 def log_info(msg: str) -> None:
     """Print info message with green color"""
     print(f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} {msg}")
+    sys.stdout.flush()
 
 
 def log_warn(msg: str) -> None:
     """Print warning message with yellow color"""
     print(f"{Colors.GRAY}[{_timestamp()}] {Colors.WARN}[warn]{Colors.RESET} {msg}", file=sys.stderr)
+    sys.stderr.flush()
 
 
 def log_error(msg: str) -> None:
     """Print error message with red color"""
     print(f"{Colors.GRAY}[{_timestamp()}] {Colors.ERROR}[error]{Colors.RESET} {msg}", file=sys.stderr)
+    sys.stderr.flush()
 
 
 def log_glove_discovered(glove_id: int, side: str, alias: Optional[str] = None) -> None:
@@ -62,6 +66,7 @@ def log_glove_discovered(glove_id: int, side: str, alias: Optional[str] = None) 
         f"Glove ID {Colors.CYAN}{hex_id}{Colors.RESET}: "
         f"Detected {Colors.BOLD}{side}{Colors.RESET} hand{alias_str}"
     )
+    sys.stdout.flush()
 
 
 def log_zmq_bound(address: str, side: str) -> None:
@@ -70,6 +75,7 @@ def log_zmq_bound(address: str, side: str) -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} "
         f"ZMQ PUB socket bound: {Colors.CYAN}{address}{Colors.RESET} ({side} hand)"
     )
+    sys.stdout.flush()
 
 
 def log_zmq_connected(address: str) -> None:
@@ -78,6 +84,7 @@ def log_zmq_connected(address: str) -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} "
         f"Connected to ZMQ server: {Colors.CYAN}{address}{Colors.RESET}"
     )
+    sys.stdout.flush()
 
 
 def log_zmq_disconnected() -> None:
@@ -86,6 +93,7 @@ def log_zmq_disconnected() -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.WARN}[warn]{Colors.RESET} "
         f"Disconnected from ZMQ server"
     )
+    sys.stdout.flush()
 
 
 def log_zmq_reconnecting(address: str) -> None:
@@ -94,6 +102,7 @@ def log_zmq_reconnecting(address: str) -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} "
         f"Reconnecting to {Colors.CYAN}{address}{Colors.RESET}..."
     )
+    sys.stdout.flush()
 
 
 def log_data_received(side: str, count: int) -> None:
@@ -102,6 +111,7 @@ def log_data_received(side: str, count: int) -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} "
         f"{side} hand: {Colors.CYAN}{count}{Colors.RESET} messages received"
     )
+    sys.stdout.flush()
 
 
 def log_startup_banner(component: str, version: str = "0.1.0") -> None:
@@ -110,6 +120,7 @@ def log_startup_banner(component: str, version: str = "0.1.0") -> None:
     print(f"{Colors.BOLD}MANUS ROS2 Transporter - {component}{Colors.RESET}")
     print(f"Version: {version}")
     print(f"{Colors.CYAN}{'='*60}{Colors.RESET}\n")
+    sys.stdout.flush()
 
 
 def log_shutdown() -> None:
@@ -118,4 +129,5 @@ def log_shutdown() -> None:
         f"{Colors.GRAY}[{_timestamp()}] {Colors.INFO}[info]{Colors.RESET} "
         f"Shutting down..."
     )
+    sys.stdout.flush()
 
