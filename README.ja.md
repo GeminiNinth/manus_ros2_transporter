@@ -53,7 +53,7 @@ Glove ID 1111111111: Detected right hand, applying coordinate transformations:
 
 **重要**: 
 - `0x423A35C7` は16進数表記、10進数表記では`1111111111`に該当。
-- 設定ファイルでは10進数（符号付き32ビット整数）で記述する
+- 設定ファイルでは16進数（`"0x..."`）または10進数で記述できる
 - 変換例: `0x423A35C7` → `1111111111`
 
 ### 2. IPアドレスの確認
@@ -84,14 +84,14 @@ ping 192.168.1.100
 ```yaml
 # 既知のデバイス
 devices:
-  # 右手グローブ（例: 0x423A35C7 = 1111111111）
+  # 右手グローブ（例: 0x423A35C7 または 1111111111）
   - glove_id: 1111111111
     side: right
     port: 8765
     alias: "my_right_glove"
     
-  # 左手グローブ（例: 0x4A5F89C0 = 1247775168）
-  - glove_id: 1247775168
+  # 左手グローブ（例: 0x84742D2E または 2222222222）
+  - glove_id: 2222222222
     side: left
     port: 8766
     alias: "my_left_glove"
@@ -332,7 +332,7 @@ devices:
     port: 8765
     alias: "right_glove"
     
-  - glove_id: 1247775168   # 左手グローブ (0x4A5F89C0)
+  - glove_id: 2222222222   # 左手グローブ (0x84742D2E)
     side: left
     port: 8766
     alias: "left_glove"

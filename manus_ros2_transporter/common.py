@@ -53,7 +53,17 @@ def get_device_config(config: Dict[str, Any], glove_id: int) -> Optional[Dict[st
     """Get device configuration by glove ID"""
     devices = config.get('devices', [])
     for device in devices:
-        if device.get('glove_id') == glove_id:
+        cfg_id = device.get('glove_id')
+        
+        # Convert string (e.g. hex '0x...') to integer
+        if isinstance(cfg_id, str):
+            try:
+                cfg_id = int(cfg_id, 0)
+            except ValueError:
+                continue
+        
+        # Ensure comparison is done as signed 32-bit integers to match ROS msg
+        if cfg_id is not None and np.int32(cfg_id) == np.int32(glove_id):
             return device
     return None
 

@@ -61,7 +61,7 @@ def generate_launch_description():
     # Note: This requires manus_ros2 package to be installed
     # See: https://docs.manus-meta.com/3.1.0/Plugins/SDK/ROS2/getting%20started/
     manus_publisher_node = Node(
-        package='manus_ros2',
+        package='manus_ros2_publisher',
         executable='manus_data_publisher',
         name='manus_data_publisher',
         output='screen',

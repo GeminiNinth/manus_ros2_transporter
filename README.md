@@ -55,7 +55,7 @@ Glove ID 1111111111: Detected right hand, applying coordinate transformations:
 
 **Important**: 
 - `0x423A35C7` is hexadecimal notation, equivalent to `1111111111` in decimal.
-- Use decimal notation (signed 32-bit integer) in the configuration file
+- You can use hexadecimal (`"0x..."`) or decimal notation in the configuration file
 - Conversion example: `0x423A35C7` → `1111111111`
 
 ### 2. Check IP Address
@@ -86,14 +86,14 @@ Edit `config/manus_devices.yaml` to register glove IDs:
 ```yaml
 # Known devices
 devices:
-  # Right hand glove (e.g., 0x423A35C7 = 1111111111)
+  # Right hand glove (e.g., 0x423A35C7 or 1111111111)
   - glove_id: 1111111111
     side: right
     port: 8765
     alias: "my_right_glove"
     
-  # Left hand glove (e.g., 0x4A5F89C0 = 1247775168)
-  - glove_id: 1247775168
+  # Left hand glove (e.g., 0x84742D2E or 2222222222)
+  - glove_id: 2222222222
     side: left
     port: 8766
     alias: "my_left_glove"
@@ -334,7 +334,7 @@ devices:
     port: 8765
     alias: "right_glove"
     
-  - glove_id: 1247775168   # Left hand glove (0x4A5F89C0)
+  - glove_id: 2222222222   # Left hand glove (0x84742D2E)
     side: left
     port: 8766
     alias: "left_glove"
