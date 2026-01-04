@@ -57,8 +57,8 @@ class ZmqBridgeNode(Node):
         # Declare parameters
         self.declare_parameter('side', 'both')  # 'left', 'right', or 'both'
         self.declare_parameter('config_path', '')
-        self.declare_parameter('right_port', 8765)
-        self.declare_parameter('left_port', 8766)
+        self.declare_parameter('right_port', 8760)
+        self.declare_parameter('left_port', 8761)
         self.declare_parameter('bind_address', '0.0.0.0')
         
         # Get parameters

@@ -35,13 +35,13 @@ def generate_launch_description():
     
     right_port_arg = DeclareLaunchArgument(
         'right_port',
-        default_value='8765',
+        default_value='8760',
         description='ZMQ port for right hand data'
     )
     
     left_port_arg = DeclareLaunchArgument(
         'left_port',
-        default_value='8766',
+        default_value='8761',
         description='ZMQ port for left hand data'
     )
     

@@ -6,7 +6,7 @@ and publishes it as a local ROS topic.
 
 Usage:
     ros2 run manus_ros2_transporter zmq_receiver --ros-args -p side:=left -p server_ip:=192.168.1.100
-    ros2 run manus_ros2_transporter zmq_receiver --ros-args -p side:=right -p server_ip:=10.0.0.1 -p port:=8765
+    ros2 run manus_ros2_transporter zmq_receiver --ros-args -p side:=right -p server_ip:=10.0.0.1 -p port:=8760
 """
 
 import threading

@@ -72,9 +72,9 @@ def get_port_for_side(config: Dict[str, Any], side: str) -> int:
     """Get the ZMQ port for a given side (left/right)"""
     server_config = config.get('server', {})
     if side.lower() == 'left':
-        return server_config.get('default_left_port', 8766)
+        return server_config.get('default_left_port', 8761)
     else:
-        return server_config.get('default_right_port', 8765)
+        return server_config.get('default_right_port', 8760)
 
 
 def serialize_pose(pose: Pose) -> Dict[str, Any]:

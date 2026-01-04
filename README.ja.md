@@ -21,8 +21,8 @@ ROS通信を使わずにManus GloveのデータをPC間で転送するためのZ
 flowchart LR
     subgraph HostPC [Host PC - ライセンスキーあり]
         MDP[manus_data_publisher] -->|ROS Topic| ZB[zmq_bridge]
-        ZB -->|Port 8765| R[右手データ]
-        ZB -->|Port 8766| L[左手データ]
+        ZB -->|Port 8760| R[右手データ]
+        ZB -->|Port 8761| L[左手データ]
         R --> LocalTeleop[manus_allegro_teleop.py]
     end
     
@@ -87,20 +87,20 @@ devices:
   # 右手グローブ（例: 0x423A35C7 または 1111111111）
   - glove_id: 1111111111
     side: right
-    port: 8765
+    port: 8760
     alias: "my_right_glove"
     
   # 左手グローブ（例: 0x84742D2E または 2222222222）
   - glove_id: 2222222222
     side: left
-    port: 8766
+    port: 8761
     alias: "my_left_glove"
 
 # サーバー設定
 server:
   bind_address: "0.0.0.0"  # 全インターフェースでリッスン
-  default_right_port: 8765
-  default_left_port: 8766
+  default_right_port: 8760
+  default_left_port: 8761
 
 # 自動検出（未登録グローブも自動的に処理）
 auto_discovery:
@@ -112,8 +112,8 @@ auto_discovery:
 
 ホストPCでZMQポートを開放：
 ```bash
-sudo ufw allow 8765/tcp
-sudo ufw allow 8766/tcp
+sudo ufw allow 8760/tcp
+sudo ufw allow 8761/tcp
 ```
 
 ### 5. 16進数 → 10進数変換ツール
@@ -164,8 +164,8 @@ ros2 run manus_ros2_transporter zmq_receiver \
 flowchart LR
     subgraph Host [Host PC]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge]
-        H_ZB -->|:8765 右手| H_Local[ローカル利用]
-        H_ZB -->|:8766 左手| H_Out[外部配信]
+        H_ZB -->|:8760 右手| H_Local[ローカル利用]
+        H_ZB -->|:8761 左手| H_Out[外部配信]
         H_Local --> H_Teleop[右手テレオペ]
     end
     
@@ -202,8 +202,8 @@ ros2 run manus_ros2_transporter zmq_receiver \
 flowchart LR
     subgraph Host [Host PC - 両手グローブ接続]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge<br/>side=both]
-        H_ZB -->|:8765 右手| H_R[外部配信]
-        H_ZB -->|:8766 左手| H_L[外部配信]
+        H_ZB -->|:8760 右手| H_R[外部配信]
+        H_ZB -->|:8761 左手| H_L[外部配信]
     end
     
     subgraph Guest [Guest PC]
@@ -236,8 +236,8 @@ ros2 run manus_ros2_transporter zmq_receiver \
 flowchart LR
     subgraph Host [Host PC - 右手グローブのみ]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge<br/>side=both]
-        H_ZB -->|:8765 右手| H_R[データあり]
-        H_ZB -->|:8766 左手| H_L[データなし]
+        H_ZB -->|:8760 右手| H_R[データあり]
+        H_ZB -->|:8761 左手| H_L[データなし]
     end
     
     subgraph Guest [Guest PC]
@@ -277,7 +277,7 @@ ros2 run manus_ros2_transporter zmq_receiver \
 flowchart LR
     subgraph Host [Host PC]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge]
-        H_ZB -->|:8765| H_R[右手データ]
+        H_ZB -->|:8760| H_R[右手データ]
     end
     
     subgraph Guest1 [Guest PC 1]
@@ -329,19 +329,19 @@ source install/setup.bash
 devices:
   - glove_id: 1111111111  # 右手グローブ (0x423A35C7)
     side: right
-    port: 8765
+    port: 8760
     alias: "right_glove"
     
   - glove_id: 2222222222   # 左手グローブ (0x84742D2E)
     side: left
-    port: 8766
+    port: 8761
     alias: "left_glove"
 
 # サーバー設定
 server:
   bind_address: "0.0.0.0"
-  default_right_port: 8765
-  default_left_port: 8766
+  default_right_port: 8760
+  default_left_port: 8761
 
 # 自動検出
 auto_discovery:
@@ -386,8 +386,8 @@ ros2 launch manus_ros2_transporter receiver.launch.py \
 | パラメータ | デフォルト | 説明 |
 |-----------|-----------|------|
 | `side` | `both` | 配信する手: `left`, `right`, `both` |
-| `right_port` | `8765` | 右手データ用ポート |
-| `left_port` | `8766` | 左手データ用ポート |
+| `right_port` | `8760` | 右手データ用ポート |
+| `left_port` | `8761` | 左手データ用ポート |
 | `bind_address` | `0.0.0.0` | バインドアドレス |
 | `config_path` | `""` | 設定ファイルパス（オプション） |
 
@@ -407,9 +407,9 @@ ros2 launch manus_ros2_transporter receiver.launch.py \
 
 1. **ファイアウォール確認**
    ```bash
-   # ポート 8765, 8766 を開放
-   sudo ufw allow 8765/tcp
-   sudo ufw allow 8766/tcp
+   # ポート 8760, 8761 を開放
+   sudo ufw allow 8760/tcp
+   sudo ufw allow 8761/tcp
    ```
 
 2. **ネットワーク疎通確認**

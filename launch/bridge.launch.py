@@ -4,7 +4,7 @@ Launch file for ZMQ Bridge (Server side)
 Usage:
     ros2 launch manus_ros2_transporter bridge.launch.py
     ros2 launch manus_ros2_transporter bridge.launch.py side:=right
-    ros2 launch manus_ros2_transporter bridge.launch.py right_port:=8765 left_port:=8766
+    ros2 launch manus_ros2_transporter bridge.launch.py right_port:=8765 left_port:=8761
 """
 
 from launch import LaunchDescription
@@ -23,13 +23,13 @@ def generate_launch_description():
     
     right_port_arg = DeclareLaunchArgument(
         'right_port',
-        default_value='8765',
+        default_value='8760',
         description='ZMQ port for right hand data'
     )
     
     left_port_arg = DeclareLaunchArgument(
         'left_port',
-        default_value='8766',
+        default_value='8761',
         description='ZMQ port for left hand data'
     )
     

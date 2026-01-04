@@ -5,15 +5,15 @@
 # Add your glove device IDs here with their corresponding side and port
 devices:
   # Right hand glove (Host's setup)
-  - glove_id: -1111111111
+  - glove_id: -1372788496
     side: right
-    port: 8765
+    port: 8760
     alias: "host_glove_01"
 
   # Left hand glove (Guest's setup)
-  - glove_id: 1111111111
+  - glove_id: 1247775168
     side: left
-    port: 8766
+    port: 8761
     alias: "guest_glove_02"
 
 # Server configuration (for `zmq_bridge.py`)
@@ -22,8 +22,8 @@ server:
   bind_address: "0.0.0.0"
 
   # Default ports for left/right hands (used when device not in devices list)
-  default_right_port: 8765
-  default_left_port: 8766
+  default_right_port: 8760
+  default_left_port: 8761
 
   # Heartbeat interval in seconds (for connection monitoring)
   heartbeat_interval: 1.0

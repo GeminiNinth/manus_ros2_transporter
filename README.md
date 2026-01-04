@@ -23,8 +23,8 @@ Follow the above documentation to set up the MANUS SDK and ROS2 package.
 flowchart LR
     subgraph HostPC [Host PC - With License Key]
         MDP[manus_data_publisher] -->|ROS Topic| ZB[zmq_bridge]
-        ZB -->|Port 8765| R[Right Hand Data]
-        ZB -->|Port 8766| L[Left Hand Data]
+        ZB -->|Port 8760| R[Right Hand Data]
+        ZB -->|Port 8761| L[Left Hand Data]
         R --> LocalTeleop[manus_allegro_teleop.py]
     end
     
@@ -89,20 +89,20 @@ devices:
   # Right hand glove (e.g., 0x423A35C7 or 1111111111)
   - glove_id: 1111111111
     side: right
-    port: 8765
+    port: 8760
     alias: "my_right_glove"
     
   # Left hand glove (e.g., 0x84742D2E or 2222222222)
   - glove_id: 2222222222
     side: left
-    port: 8766
+    port: 8761
     alias: "my_left_glove"
 
 # Server settings
 server:
   bind_address: "0.0.0.0"  # Listen on all interfaces
-  default_right_port: 8765
-  default_left_port: 8766
+  default_right_port: 8760
+  default_left_port: 8761
 
 # Auto-discovery (automatically handles unregistered gloves)
 auto_discovery:
@@ -114,8 +114,8 @@ auto_discovery:
 
 Open ZMQ ports on the Host PC:
 ```bash
-sudo ufw allow 8765/tcp
-sudo ufw allow 8766/tcp
+sudo ufw allow 8760/tcp
+sudo ufw allow 8761/tcp
 ```
 
 ### 5. Hexadecimal → Decimal Conversion Tool
@@ -166,8 +166,8 @@ The most common configuration. Host PC uses the right hand glove, Guest PC uses 
 flowchart LR
     subgraph Host [Host PC]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge]
-        H_ZB -->|:8765 Right| H_Local[Local Use]
-        H_ZB -->|:8766 Left| H_Out[External Distribution]
+        H_ZB -->|:8760 Right| H_Local[Local Use]
+        H_ZB -->|:8761 Left| H_Out[External Distribution]
         H_Local --> H_Teleop[Right Hand Teleop]
     end
     
@@ -204,8 +204,8 @@ Host PC has both gloves connected, Guest PC receives only right hand data.
 flowchart LR
     subgraph Host [Host PC - Both Gloves Connected]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge<br/>side=both]
-        H_ZB -->|:8765 Right| H_R[External Distribution]
-        H_ZB -->|:8766 Left| H_L[External Distribution]
+        H_ZB -->|:8760 Right| H_R[External Distribution]
+        H_ZB -->|:8761 Left| H_L[External Distribution]
     end
     
     subgraph Guest [Guest PC]
@@ -238,8 +238,8 @@ When only the right hand glove is connected to the Host PC, but the Guest PC nee
 flowchart LR
     subgraph Host [Host PC - Right Glove Only]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge<br/>side=both]
-        H_ZB -->|:8765 Right| H_R[Data Available]
-        H_ZB -->|:8766 Left| H_L[No Data]
+        H_ZB -->|:8760 Right| H_R[Data Available]
+        H_ZB -->|:8761 Left| H_L[No Data]
     end
     
     subgraph Guest [Guest PC]
@@ -279,7 +279,7 @@ When you want multiple Guest PCs to receive the same glove data (for demos, moni
 flowchart LR
     subgraph Host [Host PC]
         H_MDP[manus_data_publisher] --> H_ZB[zmq_bridge]
-        H_ZB -->|:8765| H_R[Right Hand Data]
+        H_ZB -->|:8760| H_R[Right Hand Data]
     end
     
     subgraph Guest1 [Guest PC 1]
@@ -331,19 +331,19 @@ source install/setup.bash
 devices:
   - glove_id: 1111111111  # Right hand glove (0x423A35C7)
     side: right
-    port: 8765
+    port: 8760
     alias: "right_glove"
     
   - glove_id: 2222222222   # Left hand glove (0x84742D2E)
     side: left
-    port: 8766
+    port: 8761
     alias: "left_glove"
 
 # Server settings
 server:
   bind_address: "0.0.0.0"
-  default_right_port: 8765
-  default_left_port: 8766
+  default_right_port: 8760
+  default_left_port: 8761
 
 # Auto-discovery
 auto_discovery:
@@ -388,8 +388,8 @@ ros2 launch manus_ros2_transporter receiver.launch.py \
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `side` | `both` | Hand to publish: `left`, `right`, `both` |
-| `right_port` | `8765` | Port for right hand data |
-| `left_port` | `8766` | Port for left hand data |
+| `right_port` | `8760` | Port for right hand data |
+| `left_port` | `8761` | Port for left hand data |
 | `bind_address` | `0.0.0.0` | Bind address |
 | `config_path` | `""` | Config file path (optional) |
 
@@ -409,9 +409,9 @@ ros2 launch manus_ros2_transporter receiver.launch.py \
 
 1. **Check Firewall**
    ```bash
-   # Open ports 8765, 8766
-   sudo ufw allow 8765/tcp
-   sudo ufw allow 8766/tcp
+   # Open ports 8760, 8761
+   sudo ufw allow 8760/tcp
+   sudo ufw allow 8761/tcp
    ```
 
 2. **Verify Network Connectivity**
